@@ -1,33 +1,44 @@
 package edu.yourorg;
 
 public class Metrics {
-    private long comparisons = 0;
-    private long allocations = 0;
-    private int maxDepth = 0;
-    private int currentDepth = 0;
+    private int comparisons;
+    private int maxDepth;
+    private int currentDepth;
+    private long startTime;
+    private long endTime;
 
-    public void incComparisons() { comparisons++; }
-    public void incAllocations() { allocations++; }
+    public Metrics() {
+        this.comparisons = 0;
+        this.maxDepth = 0;
+        this.currentDepth = 0;
+    }
+
+    public void start() {
+        this.startTime = System.nanoTime();
+        this.comparisons = 0;
+        this.maxDepth = 0;
+        this.currentDepth = 0;
+    }
+
+    public void stop() {
+        this.endTime = System.nanoTime();
+    }
+
+    public void incrementComparisons() {
+        this.comparisons++;
+    }
 
     public void enterRecursion() {
-        currentDepth++;
-        if (currentDepth > maxDepth) {
-            maxDepth = currentDepth;
-        }
+        this.currentDepth++;
+        this.maxDepth = Math.max(this.maxDepth, this.currentDepth);
     }
 
     public void exitRecursion() {
-        currentDepth--;
+        this.currentDepth--;
     }
 
-    public long getComparisons() { return comparisons; }
-    public long getAllocations() { return allocations; }
+    // Getters
+    public int getComparisons() { return comparisons; }
     public int getMaxDepth() { return maxDepth; }
-
-    public void reset() {
-        comparisons = 0;
-        allocations = 0;
-        maxDepth = 0;
-        currentDepth = 0;
-    }
+    public long getTimeNs() { return endTime - startTime; }
 }
